@@ -44,7 +44,7 @@
     <div class="btn-group btn-group-xs">
       <?php if ($pe['Persona']['auto_id'] != ''): ?>
 
-       
+        <a href="javascript:" onclick="cargarmodal('<?php echo $this->Html->url(array('action' => 'autos',$pe['Persona']['id'])) ?>'  );"> Autos</a>
 
         <a href='<?php echo $this->Html->url(array('action' => 'verauto',$pe['Persona']['auto_id'])); ?>' title="ver auto" class="btn btn-success btn-sm"><i class="fa fa-car"></i></a>
 
