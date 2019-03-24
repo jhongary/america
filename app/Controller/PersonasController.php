@@ -4,7 +4,7 @@
 App::uses('AppController', 'Controller');
 class PersonasController extends AppController {
 
-    public $uses = array('Persona','User','Auto');
+    public $uses = array('Persona','User','Auto','AutosPersona');
     public $layout = 'monster';
 
     public function beforeFilter() {
@@ -12,7 +12,7 @@ class PersonasController extends AppController {
         //$this->Auth->allow();
     }
     public function index() {
-        
+
         $personas = $this->Persona->find('all');
         $this->set(compact('personas'));
     }
@@ -22,10 +22,10 @@ class PersonasController extends AppController {
         $this->request->data = $this->Persona->read();
 
         $autos = $this->Auto->find('list',array(
-      'recursive' => -1,
-      'conditions' => array('!ISNULL(user_id)'),
-      'fields' => array('id','placa')
-    ));
+          'recursive' => -1,
+          'conditions' => array('!ISNULL(user_id)'),
+          'fields' => array('id','placa')
+      ));
         //debug($autos);exit;
         
         $this->set(compact('idPersona','autos'));
@@ -56,7 +56,7 @@ class PersonasController extends AppController {
       if (empty($valida)) {
         $this->request->data['Persona']['id_user'] = $this->Session->read('Auth.User.id');
         if ($this->Persona->save($this->request->data['Persona'])) {
-            
+
             $this->Session->setFlash('Se registro correctamente los datos!!!', 'msgbueno');
         } else {
             $this->Session->setFlash('NO se pudo registrar los datos de la categoria!!!', 'msgerror');
@@ -81,15 +81,15 @@ public function ver($idPersona = null)
 
 
 
- public function eliminar($idPersona){
-        $this->Persona->id = $idPersona;
-        $e_persona['deleted'] = date('Y-m-d');
-        $e_auto['auto_id'] = null;
-        $this->Persona->save($e_persona);
-        $this->Persona->save($e_auto);
-        $this->Session->setFlash("Se ha eliminado al conductor exitosamente!!",'msgbueno');
-        $this->redirect($this->referer());
-    }
+public function eliminar($idPersona){
+    $this->Persona->id = $idPersona;
+    $e_persona['deleted'] = date('Y-m-d');
+    $e_auto['auto_id'] = null;
+    $this->Persona->save($e_persona);
+    $this->Persona->save($e_auto);
+    $this->Session->setFlash("Se ha eliminado al conductor exitosamente!!",'msgbueno');
+    $this->redirect($this->referer());
+}
 
 public function ajaxfoto($idPersona = null)
 {
@@ -180,6 +180,42 @@ public function guardafoto()
             $this->Session->setFlash('NO se pudo registrar los datos del auto!!!', 'msgerror');
         }
         $this->redirect($this->referer());
+    }
+
+
+    public function autos($idPersona){
+        $this->layout = 'ajax';
+        if(!empty($this->request->data['Persona']['auto_id'])){
+            $d_relacion['persona_id'] = $idPersona;
+            $d_relacion['auto_id'] = $this->request->data['Persona']['auto_id'];
+            $this->AutosPersona->create();
+            $this->AutosPersona->save($d_relacion);
+            exit;
+        }
+
+        $autos_reg = $this->AutosPersona->find('all',array(
+            'recursive' => 0,
+            'conditions' => array(
+                'AutosPersona.persona_id' => $idPersona,
+                'AutosPersona.deleted' => null
+            ),
+            'fields' => array('AutosPersona.id','Auto.placa','Auto.modelo','Auto.nromov')
+        ));
+
+
+        $autos = $this->Auto->find('list',array(
+          'recursive' => -1,
+          'conditions' => array('!ISNULL(user_id)'),
+          'fields' => array('id','placa')
+      ));
+        $this->set(compact('idPersona','autos','autos_reg'));
+    }
+
+    public function eliminaauto($idRelacion){
+        $d_relacion['deleted'] = date('Y-m-d H:i:s');
+        $this->AutosPersona->id = $idRelacion;
+        $this->AutosPersona->save($d_relacion);
+        exit;
     }
 
 
