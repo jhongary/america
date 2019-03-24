@@ -50,11 +50,12 @@
     <div class="btn-group btn-group-xs">
       <?php if ($pe['Persona']['auto_id'] != ''): ?>
 
+        <a href='<?php echo $this->Html->url(array('action' => 'persona',$pe['Persona']['id'])); ?>' title="Pago" class="btn btn-dark btn-sm"><i class="fa fa-money"></i></a>
+
+
         <a href="javascript:" onclick="cargarmodal('<?php echo $this->Html->url(array('action' => 'autos',$pe['Persona']['id'])) ?>'  );"> Autos</a>
 
         <a href='<?php echo $this->Html->url(array('action' => 'verauto',$pe['Persona']['auto_id'])); ?>' title="ver auto" class="btn btn-success btn-sm"><i class="fa fa-car"></i></a>
-
-
 
         <?php else: ?>
           <?php if ($this->Session->read('Auth.User.role') == 'Administrador'): ?>
