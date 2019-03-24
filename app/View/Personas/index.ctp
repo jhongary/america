@@ -31,7 +31,13 @@
         </thead>
         <tbody>
           <?php foreach ($personas as $pe): ?>
-            <tr>
+            <?php
+            $stilos = ''; 
+            if($pe['Persona']['estado'] == 'Deshabilitado'){
+              $stilos = 'style="background: #ff00005e;"'; 
+            }
+            ?>
+            <tr <?php echo $stilos ;?>>
 <!-- <img src="<?php echo $this->Html->webroot('img/fotos/' . $m['Mascota']['imagen']); ?>"
   style="width: 51px; height: 51px;"/> -->
 

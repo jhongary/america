@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 4.4.11
--- http://www.phpmyadmin.net
+-- version 4.8.2
+-- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 24, 2019 at 12:26 PM
--- Server version: 5.5.62-0ubuntu0.14.04.1
--- PHP Version: 5.5.9-1ubuntu4.26
+-- Generation Time: Mar 24, 2019 at 03:24 PM
+-- Server version: 5.7.25-0ubuntu0.16.04.2
+-- PHP Version: 5.6.40-5+ubuntu16.04.1+deb.sury.org+1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -26,7 +28,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `autos`
 --
 
-CREATE TABLE IF NOT EXISTS `autos` (
+CREATE TABLE `autos` (
   `id` int(11) NOT NULL,
   `marca` varchar(50) NOT NULL,
   `modelo` varchar(50) DEFAULT NULL,
@@ -41,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `autos` (
   `persona_id` int(11) DEFAULT NULL,
   `fabricacion` varchar(150) DEFAULT NULL,
   `imagen` varchar(225) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `autos`
@@ -59,7 +61,7 @@ INSERT INTO `autos` (`id`, `marca`, `modelo`, `tipo`, `color`, `placa`, `nromov`
 -- Table structure for table `autos_personas`
 --
 
-CREATE TABLE IF NOT EXISTS `autos_personas` (
+CREATE TABLE `autos_personas` (
   `id` int(11) NOT NULL,
   `auto_id` int(11) DEFAULT NULL,
   `persona_id` int(11) DEFAULT NULL,
@@ -68,13 +70,22 @@ CREATE TABLE IF NOT EXISTS `autos_personas` (
   `modified` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `autos_personas`
+--
+
+INSERT INTO `autos_personas` (`id`, `auto_id`, `persona_id`, `deleted`, `created`, `modified`) VALUES
+(1, 2, 4, NULL, '2019-03-24 13:51:17', '2019-03-24 13:51:17'),
+(2, 1, 2, NULL, '2019-03-24 13:51:27', '2019-03-24 13:51:27'),
+(3, 3, 2, '2019-03-24 14:00:36', '2019-03-24 13:51:29', '2019-03-24 14:00:36');
+
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `idiomas`
 --
 
-CREATE TABLE IF NOT EXISTS `idiomas` (
+CREATE TABLE `idiomas` (
   `id` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `principal` int(1) DEFAULT NULL,
@@ -86,10 +97,26 @@ CREATE TABLE IF NOT EXISTS `idiomas` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `pagos`
+--
+
+CREATE TABLE `pagos` (
+  `id` int(11) NOT NULL,
+  `auto_id` int(11) NOT NULL,
+  `monto` decimal(10,2) NOT NULL,
+  `fecha` date NOT NULL,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  `deleted` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `personas`
 --
 
-CREATE TABLE IF NOT EXISTS `personas` (
+CREATE TABLE `personas` (
   `id` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `apellido` varchar(100) NOT NULL,
@@ -111,7 +138,7 @@ CREATE TABLE IF NOT EXISTS `personas` (
   `id_user` int(11) DEFAULT NULL,
   `categoria` varchar(50) DEFAULT NULL,
   `motivo_baja` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `personas`
@@ -129,7 +156,7 @@ INSERT INTO `personas` (`id`, `nombre`, `apellido`, `ci`, `nro_movil`, `telefono
 -- Table structure for table `phinxlog`
 --
 
-CREATE TABLE IF NOT EXISTS `phinxlog` (
+CREATE TABLE `phinxlog` (
   `version` bigint(20) NOT NULL,
   `migration_name` varchar(100) DEFAULT NULL,
   `start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -156,7 +183,7 @@ INSERT INTO `phinxlog` (`version`, `migration_name`, `start_time`, `end_time`, `
 -- Table structure for table `tarifas`
 --
 
-CREATE TABLE IF NOT EXISTS `tarifas` (
+CREATE TABLE `tarifas` (
   `id` int(11) NOT NULL,
   `inicio` varchar(200) DEFAULT NULL,
   `destino` varchar(200) DEFAULT NULL,
@@ -165,7 +192,7 @@ CREATE TABLE IF NOT EXISTS `tarifas` (
   `deleted` datetime DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tarifas`
@@ -181,7 +208,7 @@ INSERT INTO `tarifas` (`id`, `inicio`, `destino`, `diurno`, `nocturno`, `deleted
 -- Table structure for table `users`
 --
 
-CREATE TABLE IF NOT EXISTS `users` (
+CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `username` varchar(50) DEFAULT NULL,
@@ -194,7 +221,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `telefono` varchar(50) DEFAULT NULL,
   `direccion` varchar(50) DEFAULT NULL,
   `email` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `users`
@@ -220,6 +247,12 @@ ALTER TABLE `autos`
 -- Indexes for table `autos_personas`
 --
 ALTER TABLE `autos_personas`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `pagos`
+--
+ALTER TABLE `pagos`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -255,27 +288,39 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `autos`
 --
 ALTER TABLE `autos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
 --
 -- AUTO_INCREMENT for table `autos_personas`
 --
 ALTER TABLE `autos_personas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `pagos`
+--
+ALTER TABLE `pagos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `personas`
 --
 ALTER TABLE `personas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
 --
 -- AUTO_INCREMENT for table `tarifas`
 --
 ALTER TABLE `tarifas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
