@@ -13,7 +13,9 @@ class PersonasController extends AppController {
     }
     public function index() {
 
-        $personas = $this->Persona->find('all');
+        $personas = $this->Persona->find('all',array(
+            'order' => array('Persona.estado DESC','Persona.id DESC')
+        ));
         $this->set(compact('personas'));
     }
     public function persona($idPersona = NULL) {
